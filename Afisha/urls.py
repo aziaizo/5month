@@ -16,14 +16,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from movie_app import views
+from movie_app.views import *
+from users.views import *
+
+list_create = {
+    'get':'list',
+    'post': 'create'}
+update_retrieve_destroy = {
+    'get': 'retrieve',
+    'put':'update',
+    'delete':'destroy'
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/movies/', views.movie_list_api_view),
-    path('api/v1/movies/<int:id>/',views.movie_detail_api_view),
-    path('api/v1/directors/', views.director_list_api_view),
-    path('api/v1/directors/<int:id>/', views.director_detail_api_view),
-    path('api/v1/reviews/', views.review_list_api_view),
-    path('api/v1/reviews/<int:id>/', views.review_detail_api_view)
+    path('api/v1/movies/', MovieModelViewSet.as_view(list_create)),
+    path('api/v1/movies/<int:pk>/',MovieModelViewSet.as_view(update_retrieve_destroy)),
+    path('api/v1/directors/', DirectorModelViewSet.as_view(list_create)),
+    path('api/v1/directors/<int:pk>/', DirectorModelViewSet.as_view(update_retrieve_destroy)),
+    path('api/v1/reviews/', ReviewModelViewSet.as_view(list_create)),
+    path('api/v1/reviews/<int:pk>/', ReviewDetailModelsViewSet.as_view(update_retrieve_destroy)),
+    path('api/v1/users/registration/', RegistrationAPIView.as_view()),
+    path('api/v1/users/authorization/', AuthorizationAPIView.as_view()),
+    path('api/v1/users/confirmation/', ConfirmationAPIView.as_view())
 ]
