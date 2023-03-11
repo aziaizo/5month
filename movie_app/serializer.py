@@ -4,11 +4,11 @@ from django.db.models import Avg
 from rest_framework.exceptions import ValidationError
 
 
-
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Review
-        fields='id text stars'.split()
+#
+# class ReviewSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=Review
+#         fields='id text stars'.split()
 
 class DirectorSerializer(serializers.ModelSerializer):
     movie_count=serializers.SerializerMethodField
@@ -31,11 +31,13 @@ class MovieSerializer(serializers.ModelSerializer):
     def get_rating(obj):
         return obj.movie_reviews.all().aggregate(Avg('stars'))
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     movie=MovieSerializer()
     class Meta:
         model=Review
         fields='__all__'
+
 
 
 class MovieValidateSerializer(serializers.Serializer):
@@ -58,7 +60,7 @@ class DirectorValidateSerializer(serializers.Serializer):
     name = serializers.CharField(min_length=2)
 
 
-class ReviewValidSerializer(serializers.Serializer):
+class ReviewValidateSerializer(serializers.Serializer):
     text = serializers.CharField(min_length=2)
     stars = serializers.IntegerField(min_value=1,max_value=5)
     movie_id = serializers.IntegerField()
